@@ -29,8 +29,6 @@ class RandomNumber(BaseCommand):
 
 
 class Calc(BaseCommand):
-    SUB_COMMANDS = [CurrentTime(), RandomNumber()]
-
     @handle_response_error(message="Invalid Expression, Must be valid mathematical Expression.")
     @get_args_only
     async def process_request(self, command_text, message_obj) -> str:
