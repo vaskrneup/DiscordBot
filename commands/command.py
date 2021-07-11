@@ -1,10 +1,14 @@
+from utils.formatter import get_help_text_from_list
+from .types import MessageObj
+
+
 class CommandManager:
     COMMANDS = []
 
     def __init__(self):
         self.activators: dict = {command.get_activator(): command for command in self.COMMANDS}
 
-    async def parse_command(self, command, message_obj=None):
+    async def parse_command(self, command: str, message_obj: MessageObj = None) -> str:
         main_command = command.split(" ", 1)[0].strip()
 
         if main_command in self.activators:
@@ -13,39 +17,31 @@ class CommandManager:
         elif main_command == "help":
             return self.create_help_text_from_list()
 
-    def create_help_text_from_list(self):
-        if not self.COMMANDS:
-            return ""
-
-        max_command_length = max([*[len(str(command)) for command in self.COMMANDS], len('COMMANDS')])
-        out = ""
-
-        out += f"`{'COMMANDS':<{max_command_length}}  | HELP\n"
-        for command in self.COMMANDS:
-            out += f"{str(command):<{max_command_length}}  |  {command.get_help_text()}\n"
-
-        out += "`"
-        return out
+    def create_help_text_from_list(self) -> str:
+        return get_help_text_from_list(self.COMMANDS)
 
 
 class BaseCommand:
-    SUB_COMMANDS = []
+    SUB_COMMANDS: list = []
     ACTIVATOR: str = None
 
     def __init__(self):
         self.__activator = self.ACTIVATOR if self.ACTIVATOR is not None else str(self.__class__.__name__.lower())
         self.activators: dict = {command.get_activator(): command for command in self.SUB_COMMANDS}
 
-    def get_activator(self):
+    def get_activator(self) -> str:
         return self.__activator
 
-    async def process_request(self, command_text, message_obj) -> str:
+    async def process_request(self, command_text: str, message_obj: MessageObj) -> str:
         raise NotImplementedError
 
-    def get_help_text(self):
+    def get_help_text(self) -> str:
         raise NotImplementedError
 
-    async def parse_command(self, command, message_obj):
+    def get_command_syntax(self) -> str:
+        raise NotImplementedError
+
+    async def parse_command(self, command: str, message_obj: MessageObj):
         main_command = command.split(" ", 1)[0].strip()
 
         if main_command in self.activators:
@@ -62,17 +58,8 @@ class BaseCommand:
         elif main_command == "help":
             return self.create_help_text_from_list()
 
-    def create_help_text_from_list(self):
-        if self.SUB_COMMANDS:
-            max_command_length = max([*[len(str(command)) for command in self.SUB_COMMANDS], len("COMMANDS")])
-            out = ""
-
-            out += f"`{'COMMANDS':<{max_command_length}}  |  HELP\n"
-            for command in self.SUB_COMMANDS:
-                out += f"{str(command):<{max_command_length}}  |  {command.get_help_text()}\n"
-            out += "`"
-
-            return out
+    def create_help_text_from_list(self) -> str:
+        return get_help_text_from_list(self.SUB_COMMANDS)
 
     def __str__(self):
         return self.get_activator()
@@ -81,7 +68,9 @@ class BaseCommand:
 def auto_parse_sub_commands(func):
     async def wrapper(self, command, *args, **kwargs):
         new_command = command.replace(self.get_activator(), "").strip()
-        if sub_command_data := await self.parse_command(new_command, *args, **kwargs):
+        sub_command_data = await self.parse_command(new_command, *args, **kwargs)
+
+        if sub_command_data is not None:
             return sub_command_data
         else:
             return await func(self, command, *args, **kwargs)
@@ -94,8 +83,8 @@ def handle_response_error(message="Something wrong happened !"):
         async def wrapper(self, command_text, *args, **kwargs):
             try:
                 return await func(self, command_text, *args, **kwargs)
-            except Exception as _:  # NOQA
-                return message
+            except Exception as e:
+                return str(e) if message is None else message
 
         return wrapper
 
