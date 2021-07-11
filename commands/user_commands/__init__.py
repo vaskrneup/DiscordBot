@@ -1,17 +1,7 @@
-from commands.command import (
-    BaseCommand,
-    auto_parse_sub_commands
-)
-from .utils import (
-    CurrentTime,
-    RandomNumber,
-    Calc,
-    SetTimer
-)
-from .ai import (
-    Search,
-    Chat
-)
+from commands.command import BaseCommand, auto_parse_sub_commands
+
+from .utils import CurrentTime, RandomNumber, Calc, SetTimer
+from .ai import Search, Chat
 
 
 class Main(BaseCommand):
@@ -26,4 +16,4 @@ class Main(BaseCommand):
         return "Hey, How are you doing !! You can type `main help` to get list of available commands."
 
     def get_help_text(self):
-        return ""
+        return "Entry point for other commands."

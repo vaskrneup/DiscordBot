@@ -1,9 +1,5 @@
-from commands.command import (
-    CommandManager
-)
-from commands.user_commands import (
-    Main
-)
+from commands.command import CommandManager
+from commands.user_commands import Main, Calc
 from commands.discord import DiscordClient
 from utils.config import Config
 

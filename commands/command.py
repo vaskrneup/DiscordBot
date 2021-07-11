@@ -10,6 +10,8 @@ class CommandManager:
         if main_command in self.activators:
             command_executor = self.activators[main_command]
             return await command_executor.process_request(command, message_obj)
+        elif main_command == "help":
+            return self.create_help_text_from_list()
 
     def create_help_text_from_list(self):
         if not self.COMMANDS:
