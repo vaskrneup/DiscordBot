@@ -1,10 +1,9 @@
+import asyncio
 import datetime
 import random
-import asyncio
 
 from commands.command import (
     BaseCommand,
-    auto_parse_sub_commands,
     handle_response_error,
     get_args_only
 )
@@ -32,6 +31,11 @@ class Calc(BaseCommand):
     @handle_response_error(message="Invalid Expression, Must be valid mathematical Expression.")
     @get_args_only
     async def process_request(self, command_text, message_obj) -> str:
+        if "**" in command_text:
+            _, power = command_text.split("**", 1)
+            if len(power) > 2:
+                return "can't have more than two digits after **."
+
         allowed_chars = "1234567890!@#$%^&*()_+=-|][{}\\;/"
         for c in command_text:
             if c not in allowed_chars:
@@ -54,14 +58,3 @@ class SetTimer(BaseCommand):
 
     def get_help_text(self):
         return "sets timer for given seconds."
-
-
-class Main(BaseCommand):
-    SUB_COMMANDS = [CurrentTime(), RandomNumber(), Calc(), SetTimer()]
-
-    @auto_parse_sub_commands
-    async def process_request(self, command_text, message_obj) -> str:
-        return "Hey, How are you doing !! You can type `main help` to get list of available commands."
-
-    def get_help_text(self):
-        return ""
