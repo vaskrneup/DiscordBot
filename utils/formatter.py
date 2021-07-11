@@ -1,4 +1,4 @@
-def get_help_text_from_list(commands):
+def get_help_text_from_list(commands, activator=None, main_command_help_text=None):
     if not commands:
         return ""
 
@@ -6,12 +6,25 @@ def get_help_text_from_list(commands):
         [*[len(str(command)) for command in commands], len('COMMANDS')]
     ) + len("[syntax]") + 2
     max_command_help_text_length = max(
-        (len(command.get_help_text()) for command in commands)
+        (max([len(command.get_help_text()), len(command.get_command_syntax())]) for command in commands)
     )
 
-    out = ""
+    out = "`"
+    if main_command_help_text:
+        out += main_command_help_text + '\n'
+
+    if activator:
+        help_text = f"Commands For '{activator}'"
+    else:
+        help_text = "All Commands"
+
     out += (
-            f"`{'commands':<{max_command_length}}| help" +
+            f"{help_text:^{max_command_length + max_command_help_text_length + 2}}\n" +
+            " " * (max_command_help_text_length + max_command_length + 2) +
+            "\n"
+    )
+    out += (
+            f"{'commands':<{max_command_length}}| help" +
             " " * (max_command_help_text_length - 4) +
             "\n"
     )
@@ -31,6 +44,6 @@ def get_help_text_from_list(commands):
                 " " * (max_command_help_text_length - len(command.get_command_syntax())) +
                 "\n"
         )
-
+    out += " " * (max_command_help_text_length + max_command_length + 2) + "\n"
     out += "`"
     return out

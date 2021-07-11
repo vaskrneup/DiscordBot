@@ -48,7 +48,7 @@ class BaseCommand:
             command_executor = self.activators[main_command]
             if command.endswith(" help"):
                 _help = command_executor.get_help_text()
-                if help_for_sub_commands := command_executor.create_help_text_from_list():
+                if help_for_sub_commands := command_executor.create_help_text_from_list(_help):
                     _help += "\n"
                     _help += "-" * int(len(_help) * 1.3)
                     _help += f"\n{help_for_sub_commands}"
@@ -58,8 +58,8 @@ class BaseCommand:
         elif main_command == "help":
             return self.create_help_text_from_list()
 
-    def create_help_text_from_list(self) -> str:
-        return get_help_text_from_list(self.SUB_COMMANDS)
+    def create_help_text_from_list(self, main_command_help_text=None) -> str:
+        return get_help_text_from_list(self.SUB_COMMANDS, self.get_activator(), main_command_help_text)
 
     def __str__(self):
         return self.get_activator()
