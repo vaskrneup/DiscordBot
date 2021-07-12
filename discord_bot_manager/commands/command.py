@@ -41,7 +41,7 @@ class BaseCommand:
     def get_command_syntax(self) -> str:
         raise NotImplementedError
 
-    async def parse_command(self, command: str, message_obj: MessageObj):
+    async def parse_command(self, command: str, message_obj: MessageObj = None):
         main_command = command.split(" ", 1)[0].strip()
 
         if main_command in self.activators:
