@@ -1,11 +1,11 @@
 import re
 
-from commands.command import (
+from discord_bot_manager.commands.command import (
     BaseCommand,
     auto_parse_sub_commands,
     get_args_only
 )
-from utils.search import search
+from discord_bot_manager.utils.search import search
 from ..types import MessageObj
 
 

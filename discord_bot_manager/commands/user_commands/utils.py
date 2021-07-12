@@ -2,7 +2,7 @@ import asyncio
 import datetime
 import random
 
-from commands.command import (
+from discord_bot_manager.commands.command import (
     BaseCommand,
     handle_response_error,
     get_args_only
@@ -43,7 +43,7 @@ class Calc(BaseCommand):
             if len(power) > 2:
                 return "can't have more than two digits after **."
 
-        allowed_chars = "1234567890!@#$%^&*()_+=-|][{}\\;/"
+        allowed_chars = "1234567890!@#$%^&*()_+=-|][{}\\;/."
         for c in command_text:
             if c not in allowed_chars:
                 return "Please give a valid mathematical expression."

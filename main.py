@@ -1,7 +1,7 @@
-from commands.command import CommandManager
-from commands.discord import DiscordClient
-from commands.user_commands import Main
-from utils.config import Config
+from discord_bot_manager.commands.command import CommandManager
+from discord_bot_manager.commands.discord import DiscordClient
+from discord_bot_manager.commands.user_commands import Main
+from discord_bot_manager.utils.config import Config
 
 config = Config()
 

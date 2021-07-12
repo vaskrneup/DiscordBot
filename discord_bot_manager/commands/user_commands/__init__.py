@@ -1,4 +1,4 @@
-from commands.command import BaseCommand, auto_parse_sub_commands
+from discord_bot_manager.commands.command import BaseCommand, auto_parse_sub_commands
 
 from .utils import CurrentTime, RandomNumber, Calc, SetTimer, SendMessage
 from .ai import Search, Chat

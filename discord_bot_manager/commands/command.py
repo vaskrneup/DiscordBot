@@ -1,4 +1,4 @@
-from utils.formatter import get_help_text_from_list
+from discord_bot_manager.utils.formatter import get_help_text_from_list
 from .types import MessageObj
 
 

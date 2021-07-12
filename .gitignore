@@ -6,3 +6,5 @@ __pycache__
 *.log
 
 config.json
+dist
+discord_bot_manager.egg-info
